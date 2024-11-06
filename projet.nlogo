@@ -1,13 +1,20 @@
 breed [ suns sun ]
 breed [ fishes fishe]
+breed [ birds bird]
+breed [ leaves leaf ]
 
 to setup
   clear-all
-  set-default-shape turtles "default"
   set-default-shape suns "circle"
   set-default-shape fishes "fish"
+  set-default-shape birds "default"
   env-setup
   swim-fish
+
+   create-leaves 50 [
+
+  ]
+
 end
 
 to env-setup
@@ -23,7 +30,8 @@ to env-setup
   ]
 
  ask patches with [
-    pxcor = -15 and pycor <= 5 or
+    pxcor = -15 and pycor >= -10 and pycor <= 10
+    or
     abs (pxcor + 15) = (pycor + 2) and pycor < 4 or
     abs (pxcor + 15) = (pycor + 8) and pycor < 3
   ] [
@@ -55,6 +63,11 @@ to swim-fish
 end
 
 
+to bird-fly
+  create-birds 50 [
+   setxy random 23 - 11 random 13 - 20
+  ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
@@ -109,7 +122,7 @@ sun-intensity
 sun-intensity
 0
 100
-50.0
+51.0
 1
 1
 NIL
