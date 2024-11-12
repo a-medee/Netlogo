@@ -11,22 +11,21 @@ to setup
   env-setup
   swim-fish
 
-   create-leaves 0 [
+  create-leaves 20 [
     setxy -20 + (random (-10 + 20) + 1)  (-5 + (random (-5 + 10 + 1)))
   ]
-
+  reset-ticks
 end
 
 to env-setup
   ask patches
   [
     set pcolor blue + 2
-    if (pycor < -7)
+    if (pycor < -7 and (pxcor >=))
       [set pcolor blue]
     if (pxcor < -13 and pycor < -7)
       [set pcolor green]
-    if (pxcor >  13 and pycor < -7)
-    [set pcolor green]
+
   ]
 
  ask patches with [
@@ -57,15 +56,27 @@ to show-intensity  ;; sun procedure
 end
 
 to swim-fish
-  create-fishes 50 [
+  create-fishes 20 [
    setxy random 23 - 11 random 13 - 20
+    set heading 90
   ]
 end
 
+to marches
+  ask fishes [
+    ifelse pcolor = blue
+    [fd 1]
+    [move-back]
+ ]
 
-to bird-fly
-  create-birds 50 [
-   setxy random 23 - 11 random 13 - 20
+ tick
+end
+
+to move-back
+  ask fishes
+  [
+    facexy 0 0
+    fd -1
   ]
 end
 @#$#@#$#@
@@ -127,6 +138,23 @@ sun-intensity
 1
 NIL
 HORIZONTAL
+
+BUTTON
+63
+150
+141
+183
+NIL
+marches
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
