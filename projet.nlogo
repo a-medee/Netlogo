@@ -11,8 +11,8 @@ to setup
   env-setup
   swim-fish
 
-   create-leaves 50 [
-
+   create-leaves 20 [
+    setxy -20 + (random (-10 + 20) + 1)  (-5 + (random (-5 + 10 + 1)))
   ]
 
 end
@@ -23,14 +23,14 @@ to env-setup
     set pcolor blue + 2
     if (pycor < -7)
       [set pcolor blue]
-    if (pxcor < -11 and pycor < -7)
+    if (pxcor < -13 and pycor < -7)
       [set pcolor green]
-    if (pxcor >  11 and pycor < -7)
+    if (pxcor >  13 and pycor < -7)
     [set pcolor green]
   ]
 
  ask patches with [
-    pxcor = -15 and pycor >= -10 and pycor <= 10
+    pxcor = -15 and pycor >= -8 and pycor <= 8
     or
     abs (pxcor + 15) = (pycor + 2) and pycor < 4 or
     abs (pxcor + 15) = (pycor + 8) and pycor < 3
