@@ -11,7 +11,7 @@ to setup
   env-setup
   swim-fish
 
-  create-leaves 20 [
+  create-birds 20 [
     setxy -20 + (random (-10 + 20) + 1)  (-5 + (random (-5 + 10 + 1)))
   ]
   reset-ticks
@@ -58,26 +58,25 @@ end
 to swim-fish
   create-fishes 20 [
    setxy random 23 - 11 random 13 - 20
-    set heading 90
+   set heading 90
   ]
 end
 
 to marches
   ask fishes [
-    ifelse pcolor = blue
-    [fd 1]
-    [move-back]
+    fd 1
  ]
-
- tick
-end
-
-to move-back
-  ask fishes
-  [
-    facexy 0 0
-    fd -1
+  ask birds [
+    set heading (towards fishe 1)
+    move
   ]
+
+  tick
+end
+to move
+  right random 10
+  left random 10
+  forward 0.1
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -146,7 +145,7 @@ BUTTON
 183
 NIL
 marches
-NIL
+T
 1
 T
 OBSERVER
