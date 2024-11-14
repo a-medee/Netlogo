@@ -1,6 +1,12 @@
 globals [
   fish-eaten          ;; To track the number of fish eaten by birds
   fish-eating-cycle   ;; To track the number of ticks passed in a cycle
+  fish-count
+]
+
+birds-own [
+  food-consumed  ;; La quantité de poissons consommée aujourd'hui
+  day-counter    ;; Compte le nombre de ticks dans une journée
 ]
 
 breed [ suns sun ]
@@ -30,12 +36,13 @@ end
 
 to generate-birds
 
-create-birds 3 [
+create-birds 1 [
 
 setxy -20 + (random (-10 + 20) + 1) (-5 + (random (-5 + 10 + 1)))
+  set food-consumed 0  ;; Initialiser la consommation des oiseaux à 0
+  set day-counter 0    ;; Compteur de ticks dans la journée
 
 ]
-
 end
 
 
@@ -100,7 +107,7 @@ end
 
 to swim-fish
 
-create-fishes 5 [
+create-fishes 11 [
 
 setxy random 23 - 11 random 10 - 20
 
@@ -112,6 +119,7 @@ end
 
 
 to marches
+  set fish-count count fishes
 ask fishes [
 fd 0.1
 ]
@@ -120,7 +128,9 @@ tick
 end
 
 to move-birds
-  ask birds [
+    ask birds [
+        if food-consumed < 5
+  [
     let target-fish one-of fishes with [distance myself < 50]  ;; Select a nearby fish
     
     if target-fish != nobody [
@@ -131,22 +141,33 @@ to move-birds
       if distance target-fish < 1 [
         ask target-fish [ die ]  ;; Eat the fish
         set fish-eaten fish-eaten + 1  ;; Increment the fish eaten counter
-        
+        set food-consumed food-consumed + 1 
         ;; After eating, the bird returns to a random position
         setxy (-20 + random 20)  -5 + random 10
+        if size < 2 [ set size size + 0.15 ]
       ]
     ]
-  ]
-  
-  ;; Update the cycle and regenerate fish if needed
-  set fish-eating-cycle fish-eating-cycle + 1
-  if fish-eating-cycle >= 5 [
-    set fish-eating-cycle 0  ;; Reset the tick counter every 160 ticks
-    if fish-eaten >= 20 [  ;; If 20 fish have been eaten
-      generate-fish  ;; Generate more fish to replenish the population
-      set fish-eaten 0  ;; Reset the eaten fish counter
+      ]
+  if food-consumed >= 5 [
+      ;; L'oiseau a mangé 10 poissons aujourd'hui, il ne mangera plus aujourd'hui
+      set food-consumed 5
+       ;; Cap sur la consommation maximale (10 poissons)
+    	setxy (-20 + random 20)  -5 + random 10
+    ]
+  if day-counter mod 180 = 0 [  ;; Une journée = 24 ticks
+    set food-consumed 0  ;; Réinitialiser la consommation à la fin de la journée
+     ;; Réinitialiser le compteur de la journée   
+    ]
+  	if day-counter = 1260 [  ;; Si 7 jours (1260 ticks) ont passé
+      generate-fish   ;; Générer 10 poissons supplémentaires
+     
     ]
   ]
+  ;; Update the cycle and regenerate fish if needed
+  if day-counter mod 1260 = 0 [  ;; Si 7 jours (1260 ticks) ont passé
+      generate-fish   ;; Générer 10 poissons supplémentaires
+     
+    ]
 end
 
 to generate-fish
@@ -154,5 +175,5 @@ to generate-fish
   create-fishes fish-to-create [
     setxy random 23 - 11 random 10 - 20
     set heading 90  ;; Random initial heading
-  ]
+]
 end
